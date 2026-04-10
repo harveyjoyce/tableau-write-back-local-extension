@@ -1,10 +1,10 @@
-# Tableau Snowflake Editor — Complete Beginner Guide
+# Tableau Snowflake Write-Back Editor — Complete Guide
 
 Edit, insert, and delete Snowflake rows directly inside a Tableau dashboard — no SQL client needed.
 
 ---
 
-## What You Are Building
+## What You Are Building 🏗️
 
 ```
 ┌─────────────────────────────────────┐
@@ -29,7 +29,7 @@ Edit, insert, and delete Snowflake rows directly inside a Tableau dashboard — 
 
 ---
 
-## Files in this Project
+## Files in this Project 📂
 
 ```
 tableau-snowflake-editor-write-back/
@@ -50,7 +50,7 @@ tableau-snowflake-editor-write-back/
 
 ---
 
-## Prerequisites
+## Prerequisites ⚙️
 
 ### 1. Node.js
 
@@ -70,7 +70,7 @@ Tableau Public does not support extensions. You need the paid Tableau Desktop.
 
 ---
 
-## Step 1 — Copy the Project Files
+## Step 1 — Copy the Project Files ©️
 
 Unzip the project into a folder you can find easily:
 
@@ -79,7 +79,7 @@ Unzip the project into a folder you can find easily:
 
 ---
 
-## Step 2 — Install Dependencies
+## Step 2 — Install Dependencies 📥
 
 IMPORTANT: You must do this every time you set up the project in a new folder.
 The node_modules folder is never included in the zip — npm downloads it fresh.
@@ -106,7 +106,7 @@ cd into the project folder, run npm install, then try again.
 
 ---
 
-## Step 3 — Set Up Your Snowflake Credentials
+## Step 3 — Set Up Your Snowflake Credentials ❄️
 
 Create the credentials file. In your terminal (inside the project folder):
 
@@ -143,7 +143,7 @@ Never share this file or commit it to git. The .gitignore already excludes it.
 
 ---
 
-## Step 4 — Load the Practice Dataset
+## Step 4 — Load the Practice Dataset 🔃
 
 The file practice_dataset.sql creates three ready-made tables so you have real data
 to experiment with before touching your own tables.
@@ -161,7 +161,7 @@ This creates:
 
 ---
 
-## Step 5 — Start the Server
+## Step 5 — Start the Server 🏁
 
 In your terminal (inside the project folder):
 
@@ -192,7 +192,7 @@ Troubleshooting:
 
 ---
 
-## Step 6 — Test the Server
+## Step 6 — Test the Server 🧪
 
 Visit http://localhost:3000 in your browser. You should see the editor app.
 
@@ -201,7 +201,7 @@ Should return: {"success":true,"message":"Server running"}
 
 ---
 
-## Step 7 — Add the Extension to Tableau
+## Step 7 — Add the Extension to Tableau 🧩
 
 1. Open Tableau Desktop
 2. Open or create a workbook, then go to a Dashboard sheet
@@ -213,7 +213,9 @@ Should return: {"success":true,"message":"Server running"}
 
 ---
 
-## Step 8 — Using the Extension
+## Step 8 — Using the Extension 📝
+
+<img width="1603" height="999" alt="{25E5609C-7F94-42F6-ABF3-1B8BD8EC8084}" src="https://github.com/user-attachments/assets/aa09c2fe-626b-4e06-8296-976b0ed8d780" />
 
 Setup (first time, inside the panel):
 
@@ -228,7 +230,6 @@ Editing data:
   Add a row:     click "+ New Row" -> fill in fields -> Save to Snowflake
   Delete a row:  hover -> click Delete -> confirm
 
-Smart inputs (v2 feature):
 The form automatically picks the right control for each column type:
 
   DATE columns             -> calendar date picker
@@ -252,7 +253,7 @@ This is the most important concept in the app.
 
 ---
 
-### Type 1 -- Overwrite
+### Type 1 -- Overwrite ✖️
 
 When you edit a row, the old values are replaced. No history is kept.
 
@@ -272,7 +273,7 @@ UPDATE DIM_CUSTOMER SET CITY = 'Paris' WHERE CUSTOMER_ID = 42;
 
 ---
 
-### Type 2 -- Keep History (Slowly Changing Dimension)
+### Type 2 -- Keep History (Slowly Changing Dimension) ➕
 
 When you edit a row, the old version is expired (given an end date, flagged inactive)
 and a new row is inserted with your changes. Nothing is ever deleted. Every version
@@ -372,7 +373,7 @@ In the editor settings:
 
 ---
 
-## The Audit Log
+## The Audit Log 📃
 
 Every change made through the editor is automatically written to SNOWFLAKE_EDITOR_AUDIT.
 This table is created on first run.
@@ -398,7 +399,7 @@ WHERE TABLE_NAME = 'DIM_CUSTOMER' AND OPERATION = 'SCD2_UPDATE';
 
 ---
 
-## Step 9 -- Deploy to a Shared Server (Optional)
+## Step 9 -- Deploy to a Shared Server (Optional) 💬
 
 Right now the server runs only on your laptop. For team use, host it on a cloud
 server (AWS, Azure, GCP, Heroku, Render, etc.) and update two files:
@@ -433,7 +434,7 @@ Then share the updated .trex file with your team.
 
 ---
 
-## Common Questions
+## Common Questions 🤔
 
 Q: "Extension not trusted" in Tableau
 A: Click OK -- normal for local extensions.
@@ -462,7 +463,7 @@ A: Run npm run dev instead. Uses nodemon to restart on every file save.
 
 ---
 
-## Security Notes
+## Security Notes 🔐
 
 - The .env file contains your password -- never commit it to git
 - Use a dedicated Snowflake service account with only the permissions it needs
@@ -471,7 +472,7 @@ A: Run npm run dev instead. Uses nodemon to restart on every file save.
 
 ---
 
-## Need Help?
+## Need Help? 🆘
 
 1. Check the terminal where node server.js is running -- errors print there
 2. Press F12 while the extension is open in Tableau -> Console tab
