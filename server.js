@@ -72,7 +72,7 @@ async function ensureAuditTable() {
       CREATE TABLE IF NOT EXISTS "${process.env.SF_SCHEMA}"."SNOWFLAKE_EDITOR_AUDIT" (
         AUDIT_ID       NUMBER AUTOINCREMENT PRIMARY KEY,
         TABLE_NAME     VARCHAR(255),
-        OPERATION      VARCHAR(10),       -- INSERT | UPDATE | DELETE | SCD2_UPDATE
+        OPERATION      VARCHAR(20),       -- INSERT | UPDATE | DELETE | SCD2_UPDATE
         PK_COLUMN      VARCHAR(255),
         PK_VALUE       VARCHAR(1000),
         OLD_VALUES     VARIANT,           -- previous row as JSON (NULL for inserts)
@@ -90,21 +90,30 @@ async function ensureAuditTable() {
 // Write one audit row. Fire-and-forget — never blocks a user action.
 async function writeAudit({ table, operation, pkColumn, pkValue, oldValues, newValues }) {
   try {
+    // PARSE_JSON cannot receive a bound NULL directly — convert to the string 'null'
+    // so Snowflake parses it as a JSON null, then store as VARIANT safely.
+    const oldJson = JSON.stringify(oldValues ?? null);
+    const newJson = JSON.stringify(newValues ?? null);
+
+    // Snowflake does not allow function calls on bind params in a VALUES clause.
+    // Switching to SELECT-based INSERT which does support it.
     await runQuery(
       `INSERT INTO "${process.env.SF_SCHEMA}"."SNOWFLAKE_EDITOR_AUDIT"
          (TABLE_NAME, OPERATION, PK_COLUMN, PK_VALUE, OLD_VALUES, NEW_VALUES)
-       VALUES (?, ?, ?, ?, PARSE_JSON(?), PARSE_JSON(?))`,
+       SELECT ?, ?, ?, ?, PARSE_JSON(?), PARSE_JSON(?)`,
       [
         table,
         operation,
         pkColumn  || null,
-        pkValue   !== undefined ? String(pkValue) : null,
-        oldValues ? JSON.stringify(oldValues) : null,
-        newValues ? JSON.stringify(newValues) : null,
+        pkValue !== undefined ? String(pkValue) : null,
+        oldJson,
+        newJson,
       ]
     );
+    console.log(`Audit: ${operation} on ${table} (pk=${pkValue})`);
   } catch (err) {
-    console.warn('Audit write failed (non-fatal):', err.message);
+    // Log the full error so it appears in the terminal — not just a warning
+    console.error('Audit write failed:', err.message);
   }
 }
 
